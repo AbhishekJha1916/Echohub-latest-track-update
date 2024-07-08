@@ -1,20 +1,35 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import React, { FormEvent, useRef, useState , ChangeEvent} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
 const SignupPage: React.FC = () => {
-    const [firstName, setFirstName] = useState<string>('');
-    const [lastName, setLastName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [day, setDay] = useState<string>('');
-    const [month, setMonth] = useState<string>('');
-    const [year, setYear] = useState<string>('');
-    const [gender, setGender] = useState<string>('');
+    const firstNameRef = useRef<HTMLInputElement | null>(null)
+    const lastNameRef = useRef<HTMLInputElement | null>(null)
+    const emailRef = useRef<HTMLInputElement | null>(null)
+    const passwordRef = useRef<HTMLInputElement | null>(null)
+    const dayRef = useRef<HTMLSelectElement | null>(null)
+    const monthRef = useRef<HTMLSelectElement | null>(null)
+    const yearRef = useRef<HTMLSelectElement | null>(null)
+    const navigate = useNavigate()
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const [selectedGender, setSelectedGender] = useState('');
+    const genderRef = useRef<HTMLInputElement | null>(null)
+
+
+    const handleGenderChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSelectedGender(event.target.value);
+        genderRef.current = event.target; // Set the ref to the selected input
+      };
+
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        Axios.post('http://localhost:8000/auth/signup', {
+        const firstName = firstNameRef.current?.value
+        const lastName = lastNameRef.current?.value
+        const email = emailRef.current?.value
+        const password = passwordRef.current?.value
+        const gender = genderRef.current?.value;
+        await Axios.post('http://localhost:8000/user/Signup', {
             firstName,
             lastName,
             email,
@@ -23,6 +38,7 @@ const SignupPage: React.FC = () => {
         })
             .then((response) => {
                 console.log(response);
+                navigate('/users/accounts/login')
             })
             .catch((err) => {
                 console.log(err);
@@ -70,33 +86,33 @@ const SignupPage: React.FC = () => {
                                         type="text"
                                         className="w-full px-4 py-3 rounded-full border-none bg-gray-200 font-[Ubuntu]"
                                         placeholder="First Name"
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+                                        ref={firstNameRef}
                                     />
                                     <input
                                         type="text"
                                         className="w-full px-4 py-3 rounded-full border-none bg-gray-200 font-[Ubuntu]"
                                         placeholder="Last Name"
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+                                        ref={lastNameRef}
                                     />
                                 </div>
                                 <input
                                     type="text"
                                     className="w-full px-4 py-3 rounded-full border-none bg-gray-200 font-[Ubuntu]"
                                     placeholder="Email"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                                    ref={emailRef}
                                 />
                                 <input
                                     type="password"
                                     className="w-full px-4 py-3 rounded-full border-none bg-gray-200 font-[Ubuntu]"
                                     placeholder="Password"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                    ref={passwordRef}
                                 />
                                 <p className="text-[#8B8B8B] font-[Ubuntu]">Date of Birth</p>
                                 <div className="flex gap-4">
                                     <select
                                         className="w-1/3 px-4 py-3 rounded-full border-none text-[#8B8B8B] bg-gray-200 font-[Ubuntu]"
-                                        value={day}
-                                        onChange={(e: ChangeEvent<HTMLSelectElement>) => setDay(e.target.value)}
+                                        ref={dayRef}
+                                        value={dayRef.current?.value}
                                     >
                                         <option value="" disabled>
                                             Day
@@ -109,8 +125,8 @@ const SignupPage: React.FC = () => {
                                     </select>
                                     <select
                                         className="w-1/3 px-4 py-3 rounded-full border-none text-[#8B8B8B] bg-gray-200 font-[Ubuntu]"
-                                        value={month}
-                                        onChange={(e: ChangeEvent<HTMLSelectElement>) => setMonth(e.target.value)}
+                                        value={monthRef.current?.value}
+                                        ref={monthRef}
                                     >
                                         <option value="" disabled>
                                             Month
@@ -126,8 +142,8 @@ const SignupPage: React.FC = () => {
                                     </select>
                                     <select
                                         className="w-1/3 px-4 py-3 rounded-full border-none text-[#8B8B8B] bg-gray-200 font-[Ubuntu]"
-                                        value={year}
-                                        onChange={(e: ChangeEvent<HTMLSelectElement>) => setYear(e.target.value)}
+                                        value={yearRef.current?.value}
+                                        ref={yearRef}
                                     >
                                         <option value="" disabled>
                                             Year
@@ -147,7 +163,9 @@ const SignupPage: React.FC = () => {
                                             name="gender"
                                             value="male"
                                             className="form-radio text-blue-600"
-                                            onChange={() => setGender('Male')}
+                                            checked={selectedGender === 'male'}
+                                            onChange={handleGenderChange}
+                                            ref={selectedGender === 'male' ? genderRef : null}
                                         />
                                         <span className="font-[Ubuntu]">Male</span>
                                     </label>
@@ -157,7 +175,9 @@ const SignupPage: React.FC = () => {
                                             name="gender"
                                             value="female"
                                             className="form-radio text-blue-600"
-                                            onChange={() => setGender('Female')}
+                                            checked={selectedGender === 'female'}
+                                            onChange={handleGenderChange}
+                                            ref={selectedGender === 'female' ? genderRef : null}
                                         />
                                         <span className="font-[Ubuntu]">Female</span>
                                     </label>
