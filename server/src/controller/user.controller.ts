@@ -3,8 +3,9 @@ import { Request, Response } from "express";
 import { compareSync, hashSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { loginSchema, signUpSchema } from "../schemas/user.validation";
-
-const key: string = process.env.JWT_SECRET_KEY || 'default_secret_key';
+import {Queue} from 'bullmq'
+const welcomeNoti = new Queue("email-queue")
+const key: string = process.env.JWT_SECRET_KEY || "default_secret_key";
 const prisma = new PrismaClient();
 
 interface UserCreateData {
@@ -24,8 +25,7 @@ interface LoginResponse {
   token: string;
 }
 
-export const 
-signup = async (
+export const signup = async (
   req: Request<any, any, UserCreateData>,
   res: Response
 ) => {
@@ -33,7 +33,7 @@ signup = async (
   if (!result.success) {
     return res.status(400).json({ errors: result.error.errors });
   }
-  const { firstName, lastName, email, password , gender} = result.data;
+  const { firstName, lastName, email, password, gender } = result.data;
   try {
     let user = await prisma.user.findFirst({ where: { email } });
     if (user) return res.json("User Already Exist");
@@ -44,9 +44,14 @@ signup = async (
         firstName,
         lastName,
         password: hashSync(password, 10),
-        gender 
+        gender,
       },
     });
+
+    await welcomeNoti.add("email-queue",{
+      email ,
+      firstName
+    })
 
     console.log(user);
     res.status(201).send("Successfully created");
