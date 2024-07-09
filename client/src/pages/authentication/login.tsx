@@ -1,28 +1,34 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, FormEvent, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
-interface FormData {
-  username: string;
-  password: string;
-}
+// interface FormData {
+//   username: string;
+//   password: string;
+// }
 
 const LoginPage: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
+    // const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
     const [error, setError] = useState<string>('');
+    const emailRef = useRef<HTMLInputElement | null>(null);
+    const passwordRef = useRef<HTMLInputElement | null>(null);
+     
     const navigate = useNavigate();
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const email = emailRef.current?.value ;
+        const password = passwordRef.current?.value ;
         try {
-            const response = await axios.post('/api/login', formData);
+            const response = await axios.post('http://localhost:8000/user/login', {
+                email ,
+                password
+            });
+            console.log(response);
             const token = response.data.token;
-            localStorage.setItem('token', token); // Store token in localStorage
+            localStorage.setItem('token', token); 
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             navigate('/dashboard'); // Navigate to the dashboard or another protected route
         } catch (error) {
             setError('Invalid username or password');
@@ -45,20 +51,20 @@ const LoginPage: React.FC = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <input
+                                ref={emailRef}
                                 type="text"
                                 name="username"
-                                value={formData.username}
-                                onChange={handleChange}
                                 className="w-[600px] px-4 py-[15px] mb-[20px] rounded-[30px] border-[none] bg-[#d9d9d9ad] font-[Ubuntu]"
                                 placeholder="Username or Email"
                             />
                         </div>
                         <div className="mb-4">
                             <input
+                                ref={passwordRef}
                                 type="password"
                                 name="password"
-                                value={formData.password}
-                                onChange={handleChange}
+                                // value={formData.password}
+                                // onChange={handleChange}
                                 className="w-[600px] px-4 py-[15px] mb-[20px] rounded-[30px] border-[none] bg-[#d9d9d9ad] font-[Ubuntu]"
                                 placeholder="Password"
                             />
