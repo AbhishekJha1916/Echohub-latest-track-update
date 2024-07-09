@@ -85,8 +85,8 @@ const Feed: React.FC = () => {
       <div className="max-w-2xl w-full">
         {/* Stories Section */}
         <section className="flex mb-5 pt-2 pb-2 pr-2">
-          <div className="bg-white text-center w-44 h-56 p-2 mr-2 rounded-lg cursor-pointer flex flex-col items-center">
-            <button className="bg-[#eff2f6] text-gray-800 border-none p-6 rounded-full cursor-pointer text-xl">
+          <div className="bg-white text-center w-44 h-56 pt-2 pb-2 pl-[50px] pr-[50px] mr-2 rounded-lg cursor-pointer flex flex-col items-center">
+            <button className="bg-[#eff2f6] text-gray-800 border-none p-6 mt-[50px] rounded-full cursor-pointer text-xl hover:bg-gray-200">
               <FaPlus />
             </button>
             <p className="mt-2">Post a <br /> Story</p>
@@ -97,7 +97,8 @@ const Feed: React.FC = () => {
                 <img
                   src={story.imageUrl}
                   alt={story.author}
-                  className="w-full h-full object-cover brightness-50 transition duration-300 ease-in-out hover:brightness-30"
+                  loading="lazy"
+                  className="w-full h-full object-cover brightness-50 transition duration-300 ease-in-out hover:brightness-20"
                 />
                 <div className="absolute bottom-0 left-0 right-0 p-2 text-white">
                   <p className="text-sm font-semibold">{story.author}</p>
@@ -111,29 +112,30 @@ const Feed: React.FC = () => {
         <section className="mb-5 p-5 bg-white rounded-lg">
           <div className="flex flex-col gap-5">
             <div className='flex items-center gap-5 mb-10'>
-              <div className="w-14 h-12 overflow-hidden rounded-full">
-                <img src={profile} alt="Profile" className="w-full h-full object-cover" />
+              <div className="w-14 h-14 overflow-hidden rounded-full">
+                <img loading="lazy" src={profile} alt="Profile" className="w-full h-full object-cover" />
               </div>
               <textarea
                 placeholder="Write your post..."
-                className="flex-1 p-2 border border-gray-300 rounded-md resize-none min-h-[5rem] overflow-hidden focus:outline-none"
+                className="flex-1 p-2 border-b border-gray-300 rounded-md resize-none min-h-[0px] overflow-hidden focus:outline-none"
                 value={text}
+                rows={1}
                 onChange={handleInput}
               />
             </div>
             <div className='flex justify-between'>
               <div className="flex gap-2">
                 <button className="flex items-center px-3 py-2 bg-[#eff2f6] text-gray-800 rounded-md hover:bg-gray-200">
-                  <FaImage className='text-green-500 mr-2' /> Photo
+                  <FaImage className='text-green-400 mr-2' /> Photo
                 </button>
                 <button className="flex items-center px-3 py-2 bg-[#eff2f6] text-gray-800 rounded-md hover:bg-gray-200">
-                  <FaVideo className='text-blue-500 mr-2' /> Video
+                  <FaVideo className='text-blue-400 mr-2' /> Video
                 </button>
                 <button className="flex items-center px-3 py-2 bg-[#eff2f6] text-gray-800 rounded-md hover:bg-gray-200">
-                  <FaCalendar className='text-red-500 mr-2' /> Event
+                  <FaCalendar className='text-red-400 mr-2' /> Event
                 </button>
                 <button className="flex items-center px-3 py-2 bg-[#eff2f6] text-gray-800 rounded-md hover:bg-gray-200">
-                  <FaSmile className='text-yellow-500 mr-2' /> Feeling/Activity
+                  <FaSmile className='text-yellow-400 mr-2' /> Feeling/Activity
                 </button>
               </div>
               <button className="px-3 py-2 bg-[#eff2f6] text-gray-800 rounded-md hover:bg-gray-200">
@@ -150,12 +152,12 @@ const Feed: React.FC = () => {
         {suggestions.map(suggestion => (
           <div key={suggestion.id} className="flex items-center mb-9">
             <div className="w-12 h-12 overflow-hidden rounded-full flex-shrink-0">
-              <img src={suggestion.photo} alt={suggestion.name} className="w-full h-full object-cover" />
+              <img loading="lazy" src={suggestion.photo} alt={suggestion.name} className="w-full h-full object-cover" />
             </div>
             <div className="flex-grow pl-3">
               <div className="flex items-center gap-2 text-gray-800 font-semibold">
                 {suggestion.name}
-                {suggestion.verified && <img src={verify} alt="verify" className="w-4 h-4" />}
+                {suggestion.verified && <img loading="lazy" src={verify} alt="verify" className="w-4 h-4" />}
               </div>
               <div className="text-gray-600 text-sm">{suggestion.about}</div>
             </div>

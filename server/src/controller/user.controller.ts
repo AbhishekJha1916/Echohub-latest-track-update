@@ -4,7 +4,7 @@ import { compareSync, hashSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { loginSchema, signUpSchema } from "../schemas/user.validation";
 
-const key = process.env.JWT_SECRET_KEY!;
+const key: string = process.env.JWT_SECRET_KEY || 'default_secret_key';
 const prisma = new PrismaClient();
 
 interface UserCreateData {

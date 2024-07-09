@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="flex justify-between items-center bg-white px-2 w-full h-20">
       <div className="flex items-center">
-        <img className="w-auto cursor-pointer px-2.5 sm:h-12 h-24" src={logo} alt="Logo" />
+        <img loading="lazy" className="w-auto cursor-pointer px-2.5 sm:h-12 h-24" src={logo} alt="Logo" />
         <ul className="ml-4 flex items-center">
           <div className="flex items-center">
             <input 
