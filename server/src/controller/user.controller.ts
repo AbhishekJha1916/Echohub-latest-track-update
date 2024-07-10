@@ -48,10 +48,10 @@ export const signup = async (
       },
     });
 
-    await welcomeNoti.add("email-queue",{
-      email ,
-      firstName
-    })
+    // await welcomeNoti.add("email-queue",{
+    //   email ,
+    //   firstName
+    // })
 
     console.log(user);
     res.status(201).send("Successfully created");
