@@ -10,16 +10,17 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("SCHEMA")
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id        Int      @id @default(autoincrement())
+  googleId  String?
   email     String   @unique
   firstName String
   lastName  String
   password  String
-  gender    String 
+  gender    String ?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
