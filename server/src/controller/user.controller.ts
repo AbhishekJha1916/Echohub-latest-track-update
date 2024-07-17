@@ -4,8 +4,9 @@ import { compareSync, hashSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { loginSchema, signUpSchema } from "../schemas/user.validation";
 import {Queue} from 'bullmq'
-const welcomeNoti = new Queue("email-queue")
-const key: string = process.env.JWT_SECRET_KEY || "default_secret_key";
+import { sendWelcomeEmail } from "../services/welcomeMail";
+// const welcomeNoti = new Queue("email-queue")
+const key: string = process.env.JWT_SECRET_KEY!;
 const prisma = new PrismaClient();
 
 interface UserCreateData {
@@ -52,7 +53,7 @@ export const signup = async (
     //   email ,
     //   firstName
     // })
-
+    await sendWelcomeEmail(email , firstName);
     console.log(user);
     res.status(201).send("Successfully created");
   } catch (error) {
@@ -87,3 +88,17 @@ export const login = async (
     res.status(500).send("An error occurred while logging in");
   }
 };
+
+
+export const googleRedirect = (  req: any, res: any) => {
+  try{
+    console.log("hit pont")
+    console.log(req.user)
+    const token = jwt.sign({userId : req.user} , key);
+    res.redirect(`http://localhost:5173/dashboard?token=${token}`);
+    res.json(token)
+
+  }catch(error){
+    console.log(error);
+  }
+}

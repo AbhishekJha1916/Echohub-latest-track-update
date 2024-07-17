@@ -1,11 +1,20 @@
 import { Worker} from "bullmq";
+import { createClient } from 'redis';
 import Redis from "ioredis";
 import { sendWelcomeEmail } from "./welcomeMail"; 
 
+// const redisConfig = {
+//   port: 6379,
+//   host: "127.0.0.1",
+// };
+
+
 const redisConfig = {
-  port: 6379,
-  host: "127.0.0.1",
+  host: 'redis-16294.c264.ap-south-1-1.ec2.redns.redis-cloud.com',
+  port: 16294,
+  password: '7M6GUA5mCXoBOyuEQZq4Ztuck0SjmA55',
 };
+
 
 const redisConnection = new Redis(redisConfig);
 

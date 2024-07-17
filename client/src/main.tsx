@@ -7,6 +7,7 @@ import LoginPage from './pages/authentication/login';
 import SignupPage from './pages/authentication/signup';
 import PageNotFound from './pages/notFound';
 import Home from './pages/home';
+import Dashboard from './pages/dashboard/Dashboard';
 
 
 
@@ -15,6 +16,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
       <Route index element={<Home />} />
+      <Route path='/dashboard' element={<Dashboard />} />
       <Route path='/users/accounts/login' element={<LoginPage />} />
       <Route path='/users/accounts/signup' element={<SignupPage />} />
       <Route path='*' element={<PageNotFound />} />
